@@ -18,14 +18,16 @@ checkDogs(dogsJulia, dogsKate);
 
 //NASLOV CChal 2
 
-const calcAverageHumanAge = function(ages){
-  const toHumanAge = ages.map((n)=> (n <= 2 ? 2*n : 16 + n*4));
-  let reduced  = toHumanAge.filter((n) => n>18); //VAZNO zadrzi sve vece od 18
+const calcAverageHumanAge = function (ages) {
+  const toHumanAge = ages.map((n) => (n <= 2 ? 2 * n : 16 + n * 4));
+  let reduced = toHumanAge.filter((n) => n > 18); //VAZNO zadrzi sve vece od 18
   console.log(reduced);
-  const averageHumanYears = reduced.reduce((ak, cur) => (ak+cur/reduced.length),0)
+  const averageHumanYears = reduced.reduce(
+    (ak, cur) => ak + cur / reduced.length,
+    0
+  );
   return averageHumanYears;
-}
-test1 = [5,2,4,1,15,8,3]
-test2 = [16,6,10,5,6,1,4]
+};
+test1 = [5, 2, 4, 1, 15, 8, 3];
+test2 = [16, 6, 10, 5, 6, 1, 4];
 calcAverageHumanAge(test2);
-
