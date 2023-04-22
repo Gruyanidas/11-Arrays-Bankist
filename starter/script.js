@@ -67,12 +67,11 @@ const displayMovement = function (movements) {
   containerMovements.innerHTML = ''; //VAZNO Ceo kontejner se 'cisti' od starih vrednosti akounta
   movements.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
-
     const html = `
 <div class="movements__row">
 <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
 <div class="movements__date">3 days ago</div>
-<div class="movements__value">${mov}</div>
+<div class="movements__value">${Math.abs(mov)}</div>
 </div>
 `;
     //VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
@@ -80,8 +79,16 @@ const displayMovement = function (movements) {
   });
 };
 
-displayMovement(account1.movements); //Poziv funkcije
+displayMovement(account3.movements); //Poziv funkcije
 
+const user = 'Steven Thomas Williams';
+const username = user
+  .toLowerCase()
+  .split(' ')
+  .map(move => move[0].toUpperCase())
+  .join('')
+  .toLowerCase();
+console.log(username);
 // console.log(containerMovements.innerHTML); //VAZNO innerHTML je ovo sto smo napravili unutar kontejnera
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////

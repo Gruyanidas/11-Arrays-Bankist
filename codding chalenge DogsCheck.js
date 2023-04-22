@@ -4,6 +4,7 @@ let dogsKate = [4, 1, 15, 8, 3];
 const checkDogs = function (dogsJulia, dogsKate) {
   let realJuliaDogs = dogsJulia.slice(1, 3);
   let united = realJuliaDogs.concat(dogsKate);
+  console.log(united);
   united.forEach(function (year, index) {
     year > 3
       ? console.log(
@@ -14,4 +15,3 @@ const checkDogs = function (dogsJulia, dogsKate) {
 };
 
 checkDogs(dogsJulia, dogsKate);
-
