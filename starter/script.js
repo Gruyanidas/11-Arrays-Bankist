@@ -79,16 +79,32 @@ const displayMovement = function (movements) {
   });
 };
 
-displayMovement(account3.movements); //Poziv funkcije
+displayMovement(account3.movements); 
+//Poziv funkcije
 
-const user = 'Steven Thomas Williams';
-const username = user
-  .toLowerCase()
-  .split(' ')
-  .map(move => move[0].toUpperCase())
-  .join('')
-  .toLowerCase();
-console.log(username);
+const calcDisplayBalance = function(movements){
+  const balance = movements.reduce((ak, cur)=>ak+cur, 0);
+  labelBalance.textContent = `${balance}€` //labelBalance je element za prikaz iz html
+};
+
+calcDisplayBalance(account1.movements);
+
+const createUserName = function (accs) {
+  accs.forEach(function(acc){
+    acc.username = acc.owner
+    .toLowerCase()
+    .split(' ')
+    .map(name => name[0])
+    .join('')
+  })
+};
+
+createUserName(accounts);
+
+
+
+
+
 // console.log(containerMovements.innerHTML); //VAZNO innerHTML je ovo sto smo napravili unutar kontejnera
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
