@@ -74,7 +74,7 @@ const displayMovement = function (movements) {
 <div class="movements__value">${Math.abs(mov)}€</div>
 </div>
 `;
-    containerMovements.insertAdjacentHTML('afterbegin', html);//VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
+    containerMovements.insertAdjacentHTML('afterbegin', html); //VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
   });
 };
 
@@ -91,7 +91,6 @@ calcDisplayBalance(account1.movements);
 calcDisplaySummary = function (movements) {
   const incomes = movements.filter(n => n > 0).reduce((ak, cur) => ak + cur, 0);
   labelSumIn.textContent = `${incomes}€`;
-
   const out = movements.filter(mov => mov < 0).reduce((ak, cur) => ak + cur, 0);
   labelSumOut.textContent = `${out}€`;
 };
