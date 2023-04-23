@@ -71,7 +71,7 @@ const displayMovement = function (movements) {
 <div class="movements__row">
 <div class="movements__type movements__type--${type}">${i + 1} ${type}</div>
 <div class="movements__date">3 days ago</div>
-<div class="movements__value">${Math.abs(mov)}</div>
+<div class="movements__value">${Math.abs(mov)}€</div>
 </div>
 `;
     //VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
@@ -79,31 +79,40 @@ const displayMovement = function (movements) {
   });
 };
 
-displayMovement(account3.movements); 
+displayMovement(account1.movements);
 //Poziv funkcije
 
-const calcDisplayBalance = function(movements){
-  const balance = movements.reduce((ak, cur)=>ak+cur, 0);
-  labelBalance.textContent = `${balance}€` //labelBalance je element za prikaz iz html
+const calcDisplayBalance = function (movements) {
+  const balance = movements.reduce((ak, cur) => ak + cur, 0);
+  labelBalance.textContent = `${balance}€`; //labelBalance je element za prikaz iz html
 };
 
 calcDisplayBalance(account1.movements);
 
+calcDisplaySummary = function (movements) {
+  const incomes = movements.filter(n => n > 0).reduce((ak, cur) => ak + cur, 0);
+  labelSumIn.textContent = `${incomes}€`;
+
+  const out = movements.filter(mov => mov<0).reduce((ak, cur)=> ak + cur, 0);
+  labelSumOut.textContent = `${out}€`;
+};
+
+calcDisplaySummary(account1.movements);
+
+
+
+
 const createUserName = function (accs) {
-  accs.forEach(function(acc){
+  accs.forEach(function (acc) {
     acc.username = acc.owner
-    .toLowerCase()
-    .split(' ')
-    .map(name => name[0])
-    .join('')
-  })
+      .toLowerCase()
+      .split(' ')
+      .map(name => name[0])
+      .join('');
+  });
 };
 
 createUserName(accounts);
-
-
-
-
 
 // console.log(containerMovements.innerHTML); //VAZNO innerHTML je ovo sto smo napravili unutar kontejnera
 /////////////////////////////////////////////////
