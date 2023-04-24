@@ -74,11 +74,11 @@ const displayMovement = function (movements) {
 <div class="movements__value">${Math.abs(mov)}€</div>
 </div>
 `;
-    containerMovements.insertAdjacentHTML('afterbegin', html); //VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
+  containerMovements.insertAdjacentHTML('afterbegin', html); //VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
   });
 };
 
-displayMovement(account1.movements);
+displayMovement(account3.movements);
 //Poziv funkcije
 
 const calcDisplayBalance = function (movements) {
@@ -86,16 +86,16 @@ const calcDisplayBalance = function (movements) {
   labelBalance.textContent = `${balance}€`; //labelBalance je element za prikaz iz html
 };
 
-calcDisplayBalance(account1.movements);
+calcDisplayBalance(account4.movements);
 
-calcDisplaySummary = function (movements) {
-  const incomes = movements.filter(n => n > 0).reduce((ak, cur) => ak + cur, 0);
+const calcDisplaySummary = function (movements) {
+  const incomes = movements.filter(mov => mov > 0).reduce((ak, cur) => ak + cur, 0);
   labelSumIn.textContent = `${incomes}€`;
   const out = movements.filter(mov => mov < 0).reduce((ak, cur) => ak + cur, 0);
-  labelSumOut.textContent = `${out}€`;
+  labelSumOut.textContent = `${Math.abs(out)}€`;
 };
 
-calcDisplaySummary(account1.movements);
+calcDisplaySummary(account3.movements);
 
 const createUserName = function (accs) {
   accs.forEach(function (acc) {
@@ -119,7 +119,5 @@ const currencies = new Map([
   ['EUR', 'Euro'],
   ['GBP', 'Pound sterling'],
 ]);
-
-const movements = [200, 450, -400, 3000, -650, -130, 70, 1300];
 
 /////////////////////////////////////////////////
