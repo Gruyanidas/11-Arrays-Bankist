@@ -74,7 +74,7 @@ const displayMovement = function (movements) {
 <div class="movements__value">${Math.abs(mov)}€</div>
 </div>
 `;
-  containerMovements.insertAdjacentHTML('afterbegin', html); //VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
+    containerMovements.insertAdjacentHTML('afterbegin', html); //VAZNO metod za ubacivanje elementa u HTML (MDN DOKUMENTACIJA)
   });
 };
 
@@ -89,13 +89,19 @@ const calcDisplayBalance = function (movements) {
 calcDisplayBalance(account4.movements);
 
 const calcDisplaySummary = function (movements) {
-  const incomes = movements.filter(mov => mov > 0).reduce((ak, cur) => ak + cur, 0);
+  const incomes = movements
+    .filter(mov => mov > 0)
+    .reduce((ak, cur) => ak + cur, 0);
   labelSumIn.textContent = `${incomes}€`;
   const out = movements.filter(mov => mov < 0).reduce((ak, cur) => ak + cur, 0);
   labelSumOut.textContent = `${Math.abs(out)}€`;
-  const interest = incomes * account3.interestRate;
-  labelSumInterest.textContent = `${interest}€`
-};
+  const interest = movements
+    .filter(mov => mov > 0)
+    .map(dep => (dep * 1.2) / 100)
+    .filter(n => n >= 1)
+    .reduce((ak, cur) => ak + cur, 0); //VAZNO drugi filter je da banka placa interest samo za deposite vece od 1
+  labelSumInterest.textContent = `${Math.round(interest)}€`;
+}; //VAZNO najbolje je chain method sa metodima koji ne menjaju postojeci red vec prave novi kao map i filter
 
 calcDisplaySummary(account3.movements);
 
