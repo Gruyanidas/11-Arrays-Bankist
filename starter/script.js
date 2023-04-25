@@ -35,6 +35,9 @@ const account4 = {
 
 const accounts = [account1, account2, account3, account4];
 
+const account = accounts.find(acc => acc.owner === 'Jessica Davis'); //VAZNO using a find method
+console.log(account);
+
 // Elements
 const labelWelcome = document.querySelector('.welcome');
 const labelDate = document.querySelector('.date');
@@ -78,7 +81,38 @@ const displayMovement = function (movements) {
   });
 };
 
-displayMovement(account3.movements);
+//event handler
+let currentAccount; //VAZNO jer ce nam trebati i za kasnije npr za transfer novca
+
+btnLogin.addEventListener(
+  'click',
+  function (
+    //VAZNO prevent form from submiting
+    event
+  ) {
+    event.preventDefault();
+    currentAccount = accounts.find(
+      acc => acc.username === inputLoginUsername.value
+    );
+
+    if (currentAccount?.pin === Number(inputLoginPin.value)) {
+      labelWelcome.textContent = `Welcome back, ${
+        currentAccount.owner.split(' ')[0]
+      }`;
+
+      containerApp.style.opacity = 100;
+      //VAZNO clearing input fields uppon loggin
+      inputLoginUsername.value = inputLoginPin.value = '';
+      inputLoginPin.blur();
+
+      displayMovement(currentAccount.movements);
+      calcDisplayBalance(currentAccount.movements);
+      calcDisplaySummary(currentAccount);
+    }
+  }
+);
+
+// displayMovement(account3.movements);
 //Poziv funkcije
 
 const calcDisplayBalance = function (movements) {
@@ -86,24 +120,26 @@ const calcDisplayBalance = function (movements) {
   labelBalance.textContent = `${balance}€`; //labelBalance je element za prikaz iz html
 };
 
-calcDisplayBalance(account4.movements);
+// calcDisplayBalance(account4.movements);
 
-const calcDisplaySummary = function (movements) {
-  const incomes = movements
+const calcDisplaySummary = function (acc) {
+  const incomes = acc.movements
     .filter(mov => mov > 0)
     .reduce((ak, cur) => ak + cur, 0);
   labelSumIn.textContent = `${incomes}€`;
-  const out = movements.filter(mov => mov < 0).reduce((ak, cur) => ak + cur, 0);
+  const out = acc.movements
+    .filter(mov => mov < 0)
+    .reduce((ak, cur) => ak + cur, 0);
   labelSumOut.textContent = `${Math.abs(out)}€`;
-  const interest = movements
+  const interest = acc.movements
     .filter(mov => mov > 0)
-    .map(dep => (dep * 1.2) / 100)
+    .map(dep => (dep * acc.interestRate) / 100)
     .filter(n => n >= 1)
     .reduce((ak, cur) => ak + cur, 0); //VAZNO drugi filter je da banka placa interest samo za deposite vece od 1
   labelSumInterest.textContent = `${Math.round(interest)}€`;
 }; //VAZNO najbolje je chain method sa metodima koji ne menjaju postojeci red vec prave novi kao map i filter
 
-calcDisplaySummary(account3.movements);
+// calcDisplaySummary(account3.movements);
 
 const createUserName = function (accs) {
   accs.forEach(function (acc) {
