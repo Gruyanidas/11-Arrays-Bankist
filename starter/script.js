@@ -94,6 +94,8 @@ btnLogin.addEventListener(
     currentAccount = accounts.find(
       acc => acc.username === inputLoginUsername.value
     );
+    
+    inputTransferAmount.value = inputTransferTo.value = '';
 
     if (currentAccount?.pin === Number(inputLoginPin.value)) {
       labelWelcome.textContent = `Welcome back, ${
@@ -105,19 +107,34 @@ btnLogin.addEventListener(
       inputLoginUsername.value = inputLoginPin.value = '';
       inputLoginPin.blur();
 
-      displayMovement(currentAccount.movements);
-      calcDisplayBalance(currentAccount.movements);
-      calcDisplaySummary(currentAccount);
+      UIUpdater(currentAccount);
+      
     }
   }
 );
 
+btnTransfer.addEventListener('click', function(event){
+  event.preventDefault(); //VAZNO svaki put kada radimo sa form
+  const amount = Number(inputTransferAmount.value);
+  const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value);
+  console.log(amount, receiverAcc);
+
+  if(amount > 0 && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username){
+    console.log('Transfer valid');
+    currentAccount.movements.push(-amount);
+    receiverAcc.movements.push(amount);
+    UIUpdater(currentAccount);
+
+  }
+
+} )
+
 // displayMovement(account3.movements);
 //Poziv funkcije
 
-const calcDisplayBalance = function (movements) {
-  const balance = movements.reduce((ak, cur) => ak + cur, 0);
-  labelBalance.textContent = `${balance}€`; //labelBalance je element za prikaz iz html
+const calcDisplayBalance = function (acc) {
+  acc.balance = acc.movements.reduce((ak, cur) => ak + cur, 0);
+  labelBalance.textContent = `${acc.balance}€`; //labelBalance je element za prikaz iz html
 };
 
 // calcDisplayBalance(account4.movements);
@@ -152,6 +169,11 @@ const createUserName = function (accs) {
 };
 
 createUserName(accounts);
+const UIUpdater = function(acc){
+  displayMovement(acc.movements);
+  calcDisplayBalance(acc);
+  calcDisplaySummary(acc);
+}
 
 // console.log(containerMovements.innerHTML); //VAZNO innerHTML je ovo sto smo napravili unutar kontejnera
 /////////////////////////////////////////////////
