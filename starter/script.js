@@ -66,9 +66,11 @@ const inputClosePin = document.querySelector('.form__input--pin');
 
 //NASLOV ACTUALL CODE
 
-const displayMovement = function (movements) {
+const displayMovement = function (movements, sort = false) {
   containerMovements.innerHTML = ''; //VAZNO Ceo kontejner se 'cisti' od starih vrednosti akounta
-  movements.forEach(function (mov, i) {
+  const movs = sort ? movements.slice().sort((a,b) => a-b) : movements;
+  
+  movs.forEach(function (mov, i) {
     const type = mov > 0 ? 'deposit' : 'withdrawal';
     const html = `
 <div class="movements__row">
@@ -94,7 +96,7 @@ btnLogin.addEventListener(
     currentAccount = accounts.find(
       acc => acc.username === inputLoginUsername.value
     );
-    
+
     inputTransferAmount.value = inputTransferTo.value = '';
 
     if (currentAccount?.pin === Number(inputLoginPin.value)) {
@@ -108,26 +110,29 @@ btnLogin.addEventListener(
       inputLoginPin.blur();
 
       UIUpdater(currentAccount);
-      
     }
   }
 );
 
-btnTransfer.addEventListener('click', function(event){
+btnTransfer.addEventListener('click', function (event) {
   event.preventDefault(); //VAZNO svaki put kada radimo sa form
   const amount = Number(inputTransferAmount.value);
-  const receiverAcc = accounts.find(acc => acc.username === inputTransferTo.value);
+  const receiverAcc = accounts.find(
+    acc => acc.username === inputTransferTo.value
+  );
   console.log(amount, receiverAcc);
 
-  if(amount > 0 && currentAccount.balance >= amount && receiverAcc?.username !== currentAccount.username){
+  if (
+    amount > 0 &&
+    currentAccount.balance >= amount &&
+    receiverAcc?.username !== currentAccount.username
+  ) {
     console.log('Transfer valid');
     currentAccount.movements.push(-amount);
     receiverAcc.movements.push(amount);
     UIUpdater(currentAccount);
-
   }
-
-} )
+});
 
 // displayMovement(account3.movements);
 //Poziv funkcije
@@ -169,12 +174,51 @@ const createUserName = function (accs) {
 };
 
 createUserName(accounts);
-const UIUpdater = function(acc){
+const UIUpdater = function (acc) {
   displayMovement(acc.movements);
   calcDisplayBalance(acc);
   calcDisplaySummary(acc);
-}
+};
 
+btnLoan.addEventListener('click', function (e) {
+  e.preventDefault();
+  const amount = Number(inputLoanAmount.value);
+
+  if (amount > 0 && currentAccount.movements.some(mov => mov >= amount * 0.1)) {
+    //adding movementt
+    currentAccount.movements.push(amount);
+
+    //update UI
+    UIUpdater(currentAccount);
+  }
+  inputLoanAmount.value = '';
+});
+
+btnClose.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  if (
+    currentAccount.username === inputCloseUsername.value &&
+    currentAccount.pin === Number(inputClosePin.value)
+  ) {
+    const index = accounts.findIndex(
+      acc => acc.username === currentAccount.username
+    );
+    //delete account
+    accounts.splice(index, 1);
+    //hide UI
+    containerApp.style.opacity = 0;
+    labelWelcome.textContent = `Enter your user name and password to login!`;
+  }
+  inputCloseUsername.value = inputClosePin.value = '';
+});
+
+let sorted = false;
+btnSort.addEventListener('click', function(event){
+  event.preventDefault();
+  displayMovement(currentAccount.movements, !sorted);
+  sorted = !sorted; //znaci nikad se ne bi setio sam...
+})
 // console.log(containerMovements.innerHTML); //VAZNO innerHTML je ovo sto smo napravili unutar kontejnera
 /////////////////////////////////////////////////
 /////////////////////////////////////////////////
@@ -187,3 +231,14 @@ const currencies = new Map([
 ]);
 
 /////////////////////////////////////////////////
+const accountMovements = accounts
+  .map(acc => acc.movements)
+  .flat()
+  .reduce((ak, cur) => ak + cur, 0);
+
+//VAZNO flat + map => better performance
+
+const accountMovements2 = accounts
+  .flatMap(acc => acc.movements)
+  .reduce((ak, cur) => ak + cur, 0);
+//VAZNO moze da bude problem kada nam treba flat sa vecom dubinom jer flatmap() ide samo jedan nivo po dubini
